@@ -1,7 +1,9 @@
-import express from "express"
+import app from "./app";
+import bot from "./bot";
 
-const app = express()
-console.log(111);
  
 
-app.listen(3000,()=> console.log("Server is listening in port 3000"))      
+
+ app.listen(3000,()=> console.log("Server is listening in port 3000"))      
+
+ bot.launch()  
