@@ -1,0 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const telegraf_1 = require("telegraf");
+const const_1 = require("../shared/const");
+const bot = new telegraf_1.Telegraf(const_1.BOT_TOKEN);
+exports.default = bot;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvYm90L2luZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsdUNBQW1DO0FBQ25DLDJDQUEyQztBQUkzQyxNQUFNLEdBQUcsR0FBRyxJQUFJLG1CQUFRLENBQUMsaUJBQVMsQ0FBQyxDQUFBO0FBSW5DLGtCQUFlLEdBQUcsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFRlbGVncmFmIH0gZnJvbSBcInRlbGVncmFmXCJcclxuaW1wb3J0IHsgQk9UX1RPS0VOIH0gZnJvbSBcIi4uL3NoYXJlZC9jb25zdFwiXHJcblxyXG4gXHJcblxyXG5jb25zdCBib3QgPSBuZXcgVGVsZWdyYWYoQk9UX1RPS0VOKVxyXG5cclxuIFxyXG5cclxuZXhwb3J0IGRlZmF1bHQgYm90Il19
