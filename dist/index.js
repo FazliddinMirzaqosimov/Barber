@@ -1,8 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const index_1 = tslib_1.__importDefault(require("./app/index"));
-const index_2 = tslib_1.__importDefault(require("./bot/index"));
-index_1.default.listen(3000, () => console.log("Server is listening in port 3000"));
-index_2.default.launch().then(() => console.log("Bot is running"));
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBSUEsZ0VBQThCO0FBQzlCLGdFQUE4QjtBQUU5QixlQUFHLENBQUMsTUFBTSxDQUFDLElBQUksRUFBRSxHQUFHLEVBQUUsQ0FBQyxPQUFPLENBQUMsR0FBRyxDQUFDLGtDQUFrQyxDQUFDLENBQUMsQ0FBQztBQUN4RSxlQUFHLENBQUMsTUFBTSxFQUFFLENBQUMsSUFBSSxDQUFDLEdBQUcsRUFBRSxDQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsZ0JBQWdCLENBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiIFxyXG5cclxuIFxyXG5cclxuaW1wb3J0IGFwcCBmcm9tIFwiLi9hcHAvaW5kZXhcIjtcclxuaW1wb3J0IGJvdCBmcm9tIFwiLi9ib3QvaW5kZXhcIjtcclxuIFxyXG5hcHAubGlzdGVuKDMwMDAsICgpID0+IGNvbnNvbGUubG9nKFwiU2VydmVyIGlzIGxpc3RlbmluZyBpbiBwb3J0IDMwMDBcIikpO1xyXG5ib3QubGF1bmNoKCkudGhlbigoKSA9PiBjb25zb2xlLmxvZyhcIkJvdCBpcyBydW5uaW5nXCIpKTtcclxuIl19
