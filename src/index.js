@@ -4,14 +4,21 @@ dotenv.config();
 const path = require("path");
 const TelegrafI18n = require("telegraf-i18n");
 const bot = require("./bot");
-const app = require("./app");
-const { ENVIRONMENT, API_URL } = require("./shared/const");
+const { ENVIRONMENT, API_URL, DATABASE_URL } = require("./shared/const");
+const { default: mongoose } = require("mongoose");
+const express = require("express");
+
+const app = express();
 
 const localesDirectory = path.resolve(__dirname, "locales");
 const i18n = new TelegrafI18n({
   defaultLanguage: "en",
   allowMissing: false, // Default true
   directory: path.resolve(localesDirectory),
+});
+
+mongoose.connect(DATABASE_URL).then(() => {
+  console.log("Database connected");
 });
 
 i18n.loadLocale("en", { greeting: "Hello!" });
@@ -27,5 +34,5 @@ if (ENVIRONMENT === "production") {
   bot.telegram.setWebhook(`${API_URL}/bot`);
 } else {
   console.log("Bot is running in development");
-  bot.launch();
+  bot.startPolling();
 }

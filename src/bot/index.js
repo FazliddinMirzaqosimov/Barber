@@ -1,8 +1,22 @@
-const { Telegraf } = require("telegraf");
+const { Telegraf, session } = require("telegraf");
 const { BOT_TOKEN } = require("../shared/const.js");
 const { start } = require("./commands/start.js");
+const { Stage } = require("telegraf/scenes");
+const { loginWizard } = require("./scenes/authscene.js");
+const { routeProtector } = require("./middlewares/authProtector.js");
 
 const bot = new Telegraf(BOT_TOKEN);
+
+const stage = new Stage([
+loginWizard  ]);
+
+bot.use(session());
+bot.use(stage.middleware())
+bot.use(routeProtector);
+bot.hears("Mijoz", async (ctx) => {
+  await ctx.reply(` Nima gap mijoz manga qara mawitta ro'yxattan o'tvol! `);
+});
+
 
 bot.start(start);
 
