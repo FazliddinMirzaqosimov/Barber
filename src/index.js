@@ -11,6 +11,7 @@ const express = require("express");
 const app = express();
 
 const localesDirectory = path.resolve(__dirname, "locales");
+
 const i18n = new TelegrafI18n({
   defaultLanguage: "en",
   allowMissing: false, // Default true
@@ -18,7 +19,7 @@ const i18n = new TelegrafI18n({
 });
 
 mongoose.connect(DATABASE_URL).then(() => {
-  console.log("Database connected");
+  console.log("Database connected!");
 });
 
 i18n.loadLocale("en", { greeting: "Hello!" });

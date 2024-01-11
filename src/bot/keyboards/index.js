@@ -1,6 +1,5 @@
 exports.main_keyboards = {
-  resize_keyboard: true,
-  keyboard: [[{ text: "Mijoz" }, { text: "Sartarosh" }]],
+  inline_keyboard: [[{ text: "Mijoz", callback_data: "client" }], [{ text: "Sartarosh", callback_data: "barber" }]],
 };
 exports.client_menu_keyboard = {
   resize_keyboard: true,

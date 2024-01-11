@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   phoneNumber: { type: String, unique: true, required: true },
   tgId: { type: Number, unique: true, required: true },
+  role: { type: String },
   created: Date,
 });
 
