@@ -16,9 +16,11 @@ import { API_URL, ENVIRONMENT } from "./shared/const.js";
 app.listen(3000, () => console.log("Server is listening in port 3000"));
 
 if (ENVIRONMENT === "production") {
+  console.log("Bot is running in production");
+
   app.use(bot.webhookCallback("/bot"));
   bot.telegram.setWebhook(`${API_URL}/bot`);
 } else {
-  console.log("Bot is running");
+  console.log("Bot is running in development");
   bot.launch();
 }
