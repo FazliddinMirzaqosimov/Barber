@@ -19,12 +19,12 @@ app.get("/",(req,res) =>{
     res.send("Hello!")
 })
 
-// if (ENVIRONMENT === "production") {
-//   console.log("Bot is running in production");
+if (ENVIRONMENT === "production") {
+  console.log("Bot is running in production");
 
-//   app.use(bot.webhookCallback("/bot"));
-//   bot.telegram.setWebhook(`${API_URL}/bot`);
-// } else {
-//   console.log("Bot is running in development");
-//   bot.launch();
-// }
+  app.use(bot.webhookCallback("/bot"));
+  bot.telegram.setWebhook(`${API_URL}/bot`);
+} else {
+  console.log("Bot is running in development");
+  bot.launch();
+}
