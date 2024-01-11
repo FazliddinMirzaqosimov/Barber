@@ -15,6 +15,10 @@ import { API_URL, ENVIRONMENT } from "./shared/const.js";
 
 app.listen(3000, () => console.log("Server is listening in port 3000"));
 
+app.get("/",(req,res) =>{
+    res.send("Hello!")
+})
+
 if (ENVIRONMENT === "production") {
   console.log("Bot is running in production");
 
