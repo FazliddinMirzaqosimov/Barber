@@ -1,5 +1,5 @@
 import { Telegraf } from "telegraf"
-import { BOT_TOKEN } from "../shared/const"
+import { BOT_TOKEN } from "../shared/const.js"
 
  
 
