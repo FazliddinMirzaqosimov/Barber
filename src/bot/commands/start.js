@@ -1,10 +1,10 @@
-const { main_keyboards } = require("../keyboards");
+const {   client_menu_keyboard } = require("../keyboards");
 
 exports.start = async (ctx) => {
   await ctx.reply(
-    "Assalomu aleykum bratishka nima gap. Bittasini tanla Klentmisan yoki Sartaroshmisan!",
+    "Start bosdin hoz!",
     {
-      reply_markup: main_keyboards,
+      reply_markup: client_menu_keyboard,
     }
   );
 };

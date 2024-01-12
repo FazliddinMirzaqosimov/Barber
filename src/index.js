@@ -7,6 +7,7 @@ const bot = require("./bot");
 const { ENVIRONMENT, API_URL, DATABASE_URL } = require("./shared/const");
 const { default: mongoose } = require("mongoose");
 const express = require("express");
+const templateRouter = require("./routes/templateRoutes");
 
 const app = express();
 
@@ -24,10 +25,20 @@ mongoose.connect(DATABASE_URL).then(() => {
 
 i18n.loadLocale("en", { greeting: "Hello!" });
 
+app.use(express.static('./public'));
+
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/public/templates');
+
 app.listen(3000, () => console.log("Server is listening in port 3000"));
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
+
+app.use("/web",templateRouter)
+
 
 if (ENVIRONMENT === "production") {
   console.log("Bot is running in production");

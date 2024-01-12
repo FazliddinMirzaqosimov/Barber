@@ -1,32 +1,28 @@
-const { Scenes } = require("telegraf");
-const { main_keyboards } = require("../keyboards");
+const { Scenes, Markup } = require("telegraf");
+const { main_keyboards, client_menu_keyboard } = require("../keyboards");
 const User = require("../../modules/userModule");
 
 exports.registerScene = new Scenes.WizardScene(
   "register-scene",
   async (ctx) => {
-    ctx.answerCbQuery();
-    ctx.reply("Soorry You are not logged in. Enter your fullName");
+    ctx.deleteMessage();
+    ctx.reply(
+      "Enter your fullName",
+      Markup.keyboard([["Asosiy menu"]]).resize()
+    );
     ctx.wizard.state.data = {};
     ctx.wizard.state.data.tgId = ctx.from.id;
     return ctx.wizard.next();
   },
   (ctx) => {
     ctx.wizard.state.data.fullName = ctx.message.text;
-    ctx.reply("Enter your phone number", {
-      reply_markup: {
-        keyboard: [
-          [
-            {
-              text: "Share contact",
-              request_contact: true,
-            },
-          ],
-        ],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    });
+    ctx.reply(
+      "Enter your phone number",
+      Markup.keyboard([
+        ["Asosiy menu"],
+        [Markup.button.contactRequest("Share Contact")],
+      ]).resize()
+    );
     return ctx.wizard.next();
   },
   (ctx) => {
@@ -43,9 +39,8 @@ exports.registerScene = new Scenes.WizardScene(
       await ctx.reply(ctx.update.callback_query.data);
       ctx.wizard.state.data.role = ctx.update.callback_query.data;
       const user = await User.create(ctx.wizard.state.data);
-       ctx.session.user = user;
+      ctx.session.user = user;
 
-       
       ctx.reply(`You are logged in`, {
         reply_markup: {
           keyboard: client_menu_keyboard,
@@ -53,8 +48,8 @@ exports.registerScene = new Scenes.WizardScene(
         },
       });
     } catch (error) {
-      ctx.reply("Nimadir xato ketdi! boshidan boshlang")
-      ctx.scene.enter("register-scene")
+      ctx.reply("Nimadir xato ketdi! boshidan boshlang");
+      ctx.scene.enter("register-scene");
       console.log(error);
     }
 

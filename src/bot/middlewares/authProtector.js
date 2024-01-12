@@ -1,3 +1,4 @@
+const { Markup } = require("telegraf");
 const User = require("../../modules/userModule");
 
 exports.routeProtector = async (ctx, next) => {
@@ -13,13 +14,9 @@ exports.routeProtector = async (ctx, next) => {
     if (!user) {
       return await ctx.reply(
         "Registratsiya qiliwin kere bu botni iwllatiw ucun!",
-        {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: "Registratsiya", callback_data: "register" }],
-            ],
-          },
-        }
+        Markup.inlineKeyboard([
+          Markup.button.callback('Registratsiya', 'register'),
+         ])
       );
     }
     ctx.session.user = user;
