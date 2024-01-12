@@ -23,10 +23,12 @@
     <h1><span>MuhammadAli Olimov</span>ning ish jadvali</h1>
 
     <div class="calendar">
-      <div class="head">
-        <div class="button prev"><i class="fa-solid fa-chevron-left"></i></div>
+      <div class="head" id="head">
+        <div class="button" id="prev">
+          <i class="fa-solid fa-chevron-left"></i>
+        </div>
         <h3 class="title" id="title">Yanvar, 2024</h3>
-        <div class="button next disable">
+        <div class="button  " id="next">
           <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
@@ -255,6 +257,9 @@
     <script>
       const titleEl = document.getElementById("title");
       const monthEl = document.getElementById("months");
+      const nextEl = document.getElementById("next");
+      const prevEl = document.getElementById("prev");
+      console.log(nextEl);
       const monthNames = [
         "Yanvar",
         "Fevral",
@@ -262,26 +267,33 @@
         "Aprel",
         "May",
         "Iyun",
+        "Iyul",
         "Avgust",
         "Sentyabr",
         "Oktyabr",
         "Noyabr",
         "Dekabr",
       ];
+      const weekNames = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thrusday",
+        "friday",
+        "saturday",
+      ];
       const today = new Date();
-      let year = today.getFullYear();
-      let month = today.getMonth();
-
-      console.log(today, monthNames[today.getMonth()]);
-      titleEl.innerText = `${
-        monthNames[today.getMonth()]
-      }, ${today.getFullYear()}`;
+      let currentDay = new Date();
 
       // Function to generate the calendar
       const manipulate = () => {
+        let year = currentDay.getFullYear();
+        let month = currentDay.getMonth();
+        titleEl.innerText = `${monthNames[month]}, ${year}`;
+
         // Get the first day of the month
         let dayone = new Date(year, month, 1).getDay();
-
         // Get the last date of the month
         let lastdate = new Date(year, month + 1, 0).getDate();
 
@@ -296,38 +308,44 @@
 
         // Loop to add the last dates of the previous month
         for (let i = dayone; i > 0; i--) {
-          lit += `<div class="month-day disabled   ">
+          const day = new Date(year, month - 1, monthlastdate - i + 1);
+          lit += `<div class="month-day disabled ${weekNames[day.getDay()]}">
           <div>
-            <h4> ${monthlastdate - i + 1}</h4>
+            <h4> ${day.getDate()} </h4>
           </div>
-          <p>10/23</p>
+          <p>${day.getMonth() + 1}/${day.getFullYear()}</p>
         </div> `;
         }
 
         // Loop to add the dates of the current month
         for (let i = 1; i <= lastdate; i++) {
+          const day = new Date(year, month, i);
+
           // Check if the current date is today
           let isToday =
             i === today.getDate() &&
-            month === new Date().getMonth() &&
-            year === new Date().getFullYear()
+            month === today.getMonth() &&
+            year === today.getFullYear()
               ? "today"
               : "";
-          lit += `  <div class="month-day   ${i}">
+          lit += `  <div class="month-day   ${isToday} ${
+            weekNames[day.getDay()]
+          }">
           <div>
             <h4>${i}</h4>
           </div>
-          <p>10/23</p>
-        </div>`;
+         </div>`;
         }
 
         // Loop to add the first dates of the next month
         for (let i = dayend; i < 6; i++) {
-          lit += `<div class="month-day disabled   ">
+          const day = new Date(year, month + 1, i - dayend + 1);
+
+          lit += `<div class="month-day disabled   ${weekNames[day.getDay()]} ">
           <div>
             <h4> ${i - dayend + 1}</h4>
           </div>
-          <p>10/23</p>
+          <p>${day.getMonth() + 1}/${day.getFullYear()}</p>
         </div> `;
         }
 
@@ -338,6 +356,23 @@
         // update the HTML of the dates element
         // with the generated calendar
         monthEl.innerHTML = lit;
+      };
+
+      nextEl.onclick = () => {
+        currentDay = new Date(
+          currentDay.getFullYear(),
+          currentDay.getMonth() + 1,
+          today.getDate()
+        );
+        manipulate();
+      };
+      prevEl.onclick = () => {
+        currentDay = new Date(
+          currentDay.getFullYear(),
+          currentDay.getMonth() - 1,
+          today.getDate()
+        );
+        manipulate();
       };
 
       manipulate();
