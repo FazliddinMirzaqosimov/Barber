@@ -21,15 +21,15 @@ const i18n = new TelegrafI18n({
 
 mongoose.connect(DATABASE_URL).then(() => {
   console.log("Database connected!");
-});
+}); 
 
 i18n.loadLocale("en", { greeting: "Hello!" });
 
-app.use(express.static('./public'));
+// app.use(express.static('./public')); 
 
 
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/public/templates');
+app.set('views', __dirname + '/templates'); 
 
 app.listen(3000, () => console.log("Server is listening in port 3000"));
 app.get("/", (req, res) => {

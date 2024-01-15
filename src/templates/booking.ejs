@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../styles/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        outline: 1px solid rgba(255, 0, 0, 0.43);
+      }
+
+      body {
+        padding: 10px;
+        font-family: "Roboto", sans-serif;
+      }
+
+      h1 {
+        font-size: 21px;
+        text-align: center;
+        padding: 0 10%;
+      }
+      h1 span {
+        color: #0f6b00;
+      }
+      h1.middle {
+        font-size: 18px;
+      }
+      h1.small {
+        font-size: 14px;
+      }
+
+      .calendar {
+        margin: 30px 0;
+      }
+      .calendar .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10% 20px;
+      }
+      .calendar .head h3 {
+        width: 100%;
+        text-align: center;
+      }
+      .calendar .head i {
+        font-size: 40px;
+      }
+      .calendar .head .disable {
+        color: grey;
+      }
+      .calendar .weeks {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        gap: 3px;
+      }
+      .calendar .weeks .week-day {
+        width: 100%;
+        text-align: center;
+        padding: 5px 0;
+      }
+      .calendar .weeks .week-day.sunday {
+        color: #f01;
+      }
+      .calendar .weeks .week-day.saturday {
+        color: #06f;
+      }
+      .calendar .months {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px;
+        padding-top: 10px;
+      }
+      .calendar .months .month-day {
+        padding: 5px;
+        text-align: center;
+        height: 70px;
+        border-top: 0.5px solid #cecece;
+        background: #fff;
+        box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
+        border-radius: 3px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .calendar .months .month-day > div {
+        width: 50%;
+        border-radius: 3px;
+      }
+      .calendar .months .today.sunday > div {
+        background-color: #f01;
+      }
+      .calendar .months .today.saturday > div {
+        background-color: #06f;
+      }
+      .calendar .months .sunday > div {
+        color: #f01;
+      }
+      .calendar .months .saturday > div {
+        color: #06f;
+      }
+      .calendar .months .today > div {
+        background-color: black;
+        color: white;
+      }
+      .calendar .months .disabled {
+        background-color: #e7e7e7;
+        opacity: 0.4;
+      }
+      .calendar .months h4 {
+        font-size: 13px;
+      }
+      .calendar .months p {
+        color: grey;
+        font-size: 8px;
+      }
+
+      .days-container {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        background-color: white;
+        transition: 0.1s;
+        translate: 100%;
+        padding: 10px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-bottom: 50px;
+      }
+      .days-container.open {
+        translate: 0;
+      }
+      .days-container i {
+        font-size: 30px;
+      }
+      .days-container .hours {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .days-container h1 {
+        margin-bottom: 20px;
+      }
+      .days-container .hour-btn {
+        border-radius: 3px;
+        border: 0.3px solid rgba(0, 0, 0, 0.29);
+        background: #fff;
+        color: rgb(72, 72, 72);
+        text-align: center;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        padding: 5px;
+      }
+      .days-container .hour-btn.current {
+        font-weight: 800;
+        color: black;
+        border: 1px solid rgb(0, 0, 0);
+      }
+      .days-container .hour-btn.disabled {
+        color: black;
+        background: #cecece;
+        opacity: 0.5;
+      }
+      .days-container .hour-btn.booked {
+        color: #128100;
+        border: 1px solid #128100;
+        background: #e3f5e1;
+      }
+      .days-container .hour-btn.nowork {
+        color: #fb3f00;
+        border: 1px solid #fb3f00;
+        background: #fff1ed;
+      }
+      .days-container .menu-btn button {
+        background-color: transparent;
+        border: none;
+      }
+
+      .modal-container {
+        display: none;
+        position: fixed;
+        z-index: 2;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-container .modal {
+        padding: 13px 5%;
+        background-color: white;
+        width: clamp(280px, 90%, 400px);
+        border-radius: 10px;
+      }
+      .modal-container .modal > i {
+        font-size: 20px;
+      }
+      .modal-container button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 5px;
+        color: white;
+        background-color: #0f6b00;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        justify-content: center;
+      }
+      .modal-container button i {
+        display: none;
+        font-size: 20px;
+        animation: loading 1s linear infinite;
+      }
+      .modal-container button.loading i {
+        display: block;
+      }
+      .modal-container.open {
+        display: flex;
+      }
+
+      .clamp {
+        margin: 0 auto;
+        width: clamp(280px, 100%, 400px);
+      }
+
+      @keyframes loading {
+        0% {
+          rotate: 0deg;
+        }
+        100% {
+          rotate: 360deg;
+        }
+      }
+
+      .modalbg{
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+      }
+
+      /*# sourceMappingURL=index.css.map */
+    </style>
+  </head>
+  <body>
+    <div class="clamp">
+      <h1><span>MuhammadAli Olimov</span>ning ish jadvali</h1>
+
+      <div class="calendar">
+        <div class="head" id="head">
+          <div class="button" id="prev">
+            <i class="fa-solid fa-chevron-left"></i>
+          </div>
+          <h3 class="title" id="title">Yanvar, 2024</h3>
+          <div class="button" id="next">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+        <div class="weeks">
+          <div class="week-day sunday">S</div>
+          <div class="week-day">M</div>
+          <div class="week-day">T</div>
+          <div class="week-day">W</div>
+          <div class="week-day">T</div>
+          <div class="week-day">F</div>
+          <div class="week-day saturday">S</div>
+        </div>
+        <div class="months" id="months"></div>
+      </div>
+    </div>
+    <div class="days-container" id="days">
+      <div class="clamp">
+        <div class="menu-btn">
+          <button onclick="closeMenu()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="hours" id="buttons">
+          <!-- <div class="hour-btn disabled">05:00</div>
+        <div class="hour-btn booked">05:00</div>
+        <div class="hour-btn current">05:00</div>
+        <div class="hour-btn nowork">05:00</div> -->
+        </div>
+      </div>
+    </div>
+    <div class="modalbg" onclick="closeModal()">
+
+    </div>
+    <div class="modal-container" id="modal"  >
+      <div class="modal">
+        <i class="fa-solid fa-xmark" onclick="closeModal()"></i>
+
+        <h1 id="modal-title" class="small">
+          Rostanam <span>21-yanvar</span> soat <span>10:00</span>ga MuhammadAli
+          Olimovga navbat ochmoqchimisiz?
+        </h1>
+        <button id="button" onclick="submitModal()">
+          <i class="fa-solid fa-spinner"></i> Navbat ochish
+        </button>
+      </div>
+    </div>
+    <script>
+      const modalEl = document.getElementById("modal");
+      const button = document.getElementById("button");
+
+      let closeModal= ()=>{
+        modalEl.classList.remove("open");
+
+      };
+      let submitModal ;
+
+      function askPermission(func) {
+        modalEl.classList.add("open");
+        submitModal = async () => {
+          button.classList.add("loading");
+          await func();
+          button.classList.remove("loading");
+          modalEl.classList.remove("open");
+        };
+      }
+    </script>
+    <script>
+      const monthNames = [
+        "Yanvar",
+        "Fevral",
+        "Mart",
+        "Aprel",
+        "May",
+        "Iyun",
+        "Iyul",
+        "Avgust",
+        "Sentyabr",
+        "Oktyabr",
+        "Noyabr",
+        "Dekabr",
+      ];
+      const weekNames = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thrusday",
+        "friday",
+        "saturday",
+      ];
+    </script>
+    <script>
+      const daysEl = document.getElementById("days");
+      const buttonsEl = document.getElementById("buttons");
+      let now = new Date();
+      let selectedDate;
+
+      function openMenu(open, date) {
+        console.log(1);
+        if (date) {
+          selectedDate = new Date(...date.split(" ").map((el) => +el));
+          renderElements();
+        }
+        daysEl.classList.toggle("open");
+      }
+      const closeMenu = () => {
+        openMenu(false);
+      };
+      function renderElements() {
+        let buttons = `<h1 class="middle">
+        <span>${selectedDate.getDate()}-${
+          monthNames[selectedDate.getMonth()]
+        }</span> kuniga MuhammadAli Olimovga
+        navbat ochish
+      </h1>`;
+        for (let index = 5; index < 24; index++) {
+          buttons += `<div class="hour-btn ${
+            index === now.getHours()
+              ? "current"
+              : index < now.getHours()
+              ? "disabled"
+              : ""
+          }"  data-hour="${index}">${`${index}`.padStart(2, "0")}:00</div>`;
+        }
+
+        buttonsEl.innerHTML = buttons;
+      }
+      daysEl.onclick = (e) => {
+        const dayEl = e.target.closest(
+          ".hour-btn:not( .disabled, .booked, .current, .nowork )"
+        );
+        if (!dayEl) {
+          return;
+        }
+        askPermission(() => {
+          fetch("https://fakestoreapi.com/products/1");
+        });
+      };
+    </script>
+    <script>
+      const titleEl = document.getElementById("title");
+      const monthEl = document.getElementById("months");
+      const nextEl = document.getElementById("next");
+      const prevEl = document.getElementById("prev");
+      let currentDay = new Date();
+
+      // Function to generate the calendar
+      const manipulate = () => {
+        let year = currentDay.getFullYear();
+        let month = currentDay.getMonth();
+        titleEl.innerText = `${monthNames[month]}, ${year}`;
+
+        // Get the first day of the month
+        let dayone = new Date(year, month, 1).getDay();
+        // Get the last date of the month
+        let lastdate = new Date(year, month + 1, 0).getDate();
+
+        // Get the day of the last date of the month
+        let dayend = new Date(year, month, lastdate).getDay();
+
+        // Get the last date of the previous month
+        let monthlastdate = new Date(year, month, 0).getDate();
+
+        // Variable to store the generated calendar HTML
+        let lit = "";
+
+        // Loop to add the last dates of the previous month
+        for (let i = dayone; i > 0; i--) {
+          const day = new Date(year, month - 1, monthlastdate - i + 1);
+          lit += `<div class="month-day disabled ${weekNames[day.getDay()]}" >
+          <div>
+            <h4> ${day.getDate()} </h4>
+          </div>
+          <p>${day.getMonth() + 1}/${day.getFullYear()}</p>
+        </div> `;
+        }
+
+        // Loop to add the dates of the current month
+        for (let i = 1; i <= lastdate; i++) {
+          const day = new Date(year, month, i);
+
+          // Check if the current date is today
+          let isToday =
+            i === now.getDate() &&
+            month === now.getMonth() &&
+            year === now.getFullYear()
+              ? "today"
+              : "";
+          lit += `  <div class="month-day   ${isToday} ${
+            weekNames[day.getDay()]
+          }" data-date="${day.getFullYear()} ${day.getMonth()} ${day.getDate()}">
+          <div>
+            <h4>${i}</h4>
+          </div>
+         </div>`;
+        }
+
+        // Loop to add the first dates of the next month
+        for (let i = dayend; i < 6; i++) {
+          const day = new Date(year, month + 1, i - dayend + 1);
+
+          lit += `<div class="month-day disabled   ${weekNames[day.getDay()]} ">
+          <div>
+            <h4> ${i - dayend + 1}</h4>
+          </div>
+          <p>${day.getMonth() + 1}/${day.getFullYear()}</p>
+        </div> `;
+        }
+
+        // Update the text of the current date element
+        // with the formatted current month and year
+        // currdate.innerText = `${months[month]} ${year}`;
+
+        // update the HTML of the dates element
+        // with the generated calendar
+        monthEl.innerHTML = lit;
+      };
+
+      monthEl.onclick = (e) => {
+        const dayEl = e.target.closest(".month-day:not( .disabled )");
+        if (!dayEl) {
+          return;
+        }
+
+        openMenu(true, dayEl.dataset.date);
+      };
+
+      nextEl.onclick = () => {
+        currentDay = new Date(
+          currentDay.getFullYear(),
+          currentDay.getMonth() + 1,
+          now.getDate()
+        );
+        manipulate();
+      };
+      prevEl.onclick = () => {
+        currentDay = new Date(
+          currentDay.getFullYear(),
+          currentDay.getMonth() - 1,
+          now.getDate()
+        );
+        manipulate();
+      };
+
+      manipulate();
+    </script>
+  </body>
+</html>

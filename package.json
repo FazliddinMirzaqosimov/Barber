@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/index",
     "dev": "nodemon src/index",
-    "style": "sass src/public/styles/index.scss  src/public/styles/index.css  --watch"
+    "style": "sass public/styles/index.scss  public/styles/index.css  --watch"
   }, 
   "keywords": [],
   "author": "",
