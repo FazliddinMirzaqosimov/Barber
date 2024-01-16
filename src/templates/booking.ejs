@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="../styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/index.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -126,6 +126,10 @@
         background-color: #e7e7e7;
         opacity: 0.4;
       }
+      .calendar .months .disabled.middle {
+        background-color: #eeeeee;
+        opacity: 0.7;
+      }
       .calendar .months h4 {
         font-size: 13px;
       }
@@ -199,25 +203,22 @@
         border: none;
       }
 
-      .modal-container {
+      .modal {
         display: none;
         position: fixed;
-        z-index: 2;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-      }
-      .modal-container .modal {
+        z-index: 4;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
         padding: 13px 5%;
         background-color: white;
         width: clamp(280px, 90%, 400px);
         border-radius: 10px;
       }
-      .modal-container .modal > i {
+      .modal > i {
         font-size: 20px;
       }
-      .modal-container button {
+      .modal button {
         margin-top: 20px;
         width: 100%;
         padding: 5px;
@@ -229,16 +230,27 @@
         gap: 20px;
         justify-content: center;
       }
-      .modal-container button i {
+      .modal button i {
         display: none;
         font-size: 20px;
         animation: loading 1s linear infinite;
       }
-      .modal-container button.loading i {
+      .modal button.loading i {
         display: block;
       }
-      .modal-container.open {
-        display: flex;
+      .modal.open {
+        display: block;
+      }
+      .modal.open + .modalbg {
+        display: block;
+      }
+
+      .modalbg {
+        background-color: rgba(0, 0, 0, 0.482);
+        display: none;
+        z-index: 3;
+        inset: 0;
+        position: fixed;
       }
 
       .clamp {
@@ -253,12 +265,6 @@
         100% {
           rotate: 360deg;
         }
-      }
-
-      .modalbg{
-        position: fixed;
-        inset: 0;
-        z-index: 2;
       }
 
       /*# sourceMappingURL=index.css.map */
@@ -306,42 +312,9 @@
         </div>
       </div>
     </div>
-    <div class="modalbg" onclick="closeModal()">
 
-    </div>
-    <div class="modal-container" id="modal"  >
-      <div class="modal">
-        <i class="fa-solid fa-xmark" onclick="closeModal()"></i>
-
-        <h1 id="modal-title" class="small">
-          Rostanam <span>21-yanvar</span> soat <span>10:00</span>ga MuhammadAli
-          Olimovga navbat ochmoqchimisiz?
-        </h1>
-        <button id="button" onclick="submitModal()">
-          <i class="fa-solid fa-spinner"></i> Navbat ochish
-        </button>
-      </div>
-    </div>
-    <script>
-      const modalEl = document.getElementById("modal");
-      const button = document.getElementById("button");
-
-      let closeModal= ()=>{
-        modalEl.classList.remove("open");
-
-      };
-      let submitModal ;
-
-      function askPermission(func) {
-        modalEl.classList.add("open");
-        submitModal = async () => {
-          button.classList.add("loading");
-          await func();
-          button.classList.remove("loading");
-          modalEl.classList.remove("open");
-        };
-      }
-    </script>
+    <div class="modal" id="modal"></div>
+    <div class="modalbg" onclick="closeModal()"></div>
     <script>
       const monthNames = [
         "Yanvar",
@@ -368,6 +341,40 @@
       ];
     </script>
     <script>
+      const modalEl = document.getElementById("modal");
+      const button = document.getElementById("button");
+
+      let closeModal = () => {
+        modalEl.classList.remove("open");
+      };
+      let submitModal;
+
+      function askPermission(date, func) {
+        modalEl.innerHTML = ` <i class="fa-solid fa-xmark" onclick="closeModal()"></i>
+<h1 id="modal-title" class="small">
+  Rostanam <span>${date.getDate()}-${
+          monthNames[date.getMonth()]
+        }</span> soat <span>${String(date.getHours()).padStart(
+          2,
+          "0"
+        )}:00</span>ga MuhammadAli
+  Olimovga navbat ochmoqchimisiz?
+</h1>
+<button id="button" onclick="submitModal()">
+  <i class="fa-solid fa-spinner"></i> Navbat ochish
+</button>`;
+
+        modalEl.classList.add("open");
+        submitModal = async () => {
+          button.classList.add("loading");
+          await func();
+          button.classList.remove("loading");
+          modalEl.classList.remove("open");
+        };
+      }
+    </script>
+
+    <script>
       const daysEl = document.getElementById("days");
       const buttonsEl = document.getElementById("buttons");
       let now = new Date();
@@ -391,13 +398,24 @@
         }</span> kuniga MuhammadAli Olimovga
         navbat ochish
       </h1>`;
-        for (let index = 5; index < 24; index++) {
+
+        const month = selectedDate.getMonth(),
+          year = selectedDate.getFullYear(),
+          day = selectedDate.getDate();
+
+        for (let index = 5; index <= 24; index++) {
+          const isToday =
+            day === now.getDate() &&
+            month === now.getMonth() &&
+            year === now.getFullYear();
+
+          let isPastHour = isToday && index < now.getHours();
+
+          // Check if the current date is today
+          let isNow = index === now.getHours() && isToday;
+
           buttons += `<div class="hour-btn ${
-            index === now.getHours()
-              ? "current"
-              : index < now.getHours()
-              ? "disabled"
-              : ""
+            isNow ? "current" : isPastHour ? "disabled" : ""
           }"  data-hour="${index}">${`${index}`.padStart(2, "0")}:00</div>`;
         }
 
@@ -410,7 +428,9 @@
         if (!dayEl) {
           return;
         }
-        askPermission(() => {
+        selectedDate.setHours(+dayEl.dataset.hour);
+
+        askPermission(selectedDate, () => {
           fetch("https://fakestoreapi.com/products/1");
         });
       };
@@ -456,17 +476,19 @@
         // Loop to add the dates of the current month
         for (let i = 1; i <= lastdate; i++) {
           const day = new Date(year, month, i);
+          let isPastDay = day.getTime() < now.getTime();
 
           // Check if the current date is today
           let isToday =
             i === now.getDate() &&
             month === now.getMonth() &&
-            year === now.getFullYear()
-              ? "today"
-              : "";
-          lit += `  <div class="month-day   ${isToday} ${
+            year === now.getFullYear();
+
+          lit += `  <div class="month-day ${
+            isPastDay && !isToday && "disabled middle"
+          } ${isToday && "today"} ${
             weekNames[day.getDay()]
-          }" data-date="${day.getFullYear()} ${day.getMonth()} ${day.getDate()}">
+          }" data-date="${day.getFullYear()} ${day.getMonth()} ${day.getDate()}"  >
           <div>
             <h4>${i}</h4>
           </div>
