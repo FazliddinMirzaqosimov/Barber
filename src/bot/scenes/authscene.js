@@ -1,12 +1,12 @@
 const { Scenes, Markup } = require("telegraf");
 const { main_keyboards, client_menu_keyboard } = require("../keyboards");
 const User = require("../../modules/userModule");
+const { start } = require("../commands/start");
 
-exports.registerScene = new Scenes.WizardScene(
+const registerScene = new Scenes.WizardScene(
   "register-scene",
   async (ctx) => {
-    ctx.deleteMessage();
-    ctx.reply(
+    await ctx.reply(
       "Enter your fullName",
       Markup.keyboard([["Asosiy menu"]]).resize()
     );
@@ -56,3 +56,25 @@ exports.registerScene = new Scenes.WizardScene(
     return ctx.scene.leave();
   }
 );
+
+registerScene.hears("Asosiy menu", async (ctx) => {
+  await ctx.scene.leave();
+  await ctx.reply(
+    "Asosiy menuga qaytdik. Botga start berish uchun /start ni bosing",
+    { reply_markup: { remove_keyboard: true } }
+  );
+});
+
+registerScene.start(async (ctx) => {
+  ctx.scene.leave();
+  return await ctx.reply(
+    "Registratsiya qiliwin kere bu botni iwllatiw ucun!",
+    Markup.inlineKeyboard([Markup.button.callback("Registratsiya", "register")])
+  );
+});
+registerScene.action("register", async (ctx) => {
+  await ctx.scene.reenter("my-wizard")(ctx);
+});
+
+module.exports = registerScene;
+ 

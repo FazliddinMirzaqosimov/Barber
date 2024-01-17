@@ -8,8 +8,14 @@ exports.main_keyboards = {
 exports.client_menu_keyboard = {
   resize_keyboard: true,
   keyboard: [
-    [{ text: "Sartarosh qidirish" }, { text: "Sozlamalar" }],
-    [{ text: "Saqlangan sartaroshlar" }],
+    [{ text: "Mening sartaroshim" }, { text: "Bot haqida" }],
+    [{ text: "Sozlamalar" }],
   ],
 };
- 
+exports.client_my_barber_keyboard = {
+  resize_keyboard: true,
+  keyboard: [
+    [{ text: "Sartaroshni o'zgartirish" }, { text: "Sozlamalar" }],
+    [{ text: "Bot haqida" }],
+  ],
+};
